@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Step 1: Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import { loginApi } from "../../apis/Api";
 
-const Loginpage = () => {
+const Loginpage = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -10,7 +10,7 @@ const Loginpage = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-  // Step 2: Use useNavigate to create a navigation function
+  // Use useNavigate to create a navigation function
   const navigate = useNavigate();
 
   const handleEmail = (e) => {
@@ -54,8 +54,11 @@ const Loginpage = () => {
         // Optionally, store user data in local storage or state
         localStorage.setItem('user', JSON.stringify(response.data.data.user));
 
+        // Update authentication status
+        onLogin();
+
         // Redirect to the homepage after successful login
-        navigate('/homepage');  // Step 3: Redirect to the homepage
+        navigate('/');
       } else {
         alert(response.data.message || "Login failed");
       }
@@ -101,6 +104,6 @@ const Loginpage = () => {
       </form>
     </div>
   );
-}
+};
 
 export default Loginpage;
