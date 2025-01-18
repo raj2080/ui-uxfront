@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';  // Step 1: Import useNavigate
 import { loginApi } from "../../apis/Api";
 
 const Loginpage = () => {
@@ -6,8 +7,11 @@ const Loginpage = () => {
   const [password, setPassword] = useState('');
 
   // States for error messages
-  const [emailError, setEmailError] = useState(''); // Corrected: defined useState for emailError
-  const [passwordError, setPasswordError] = useState(''); // Corrected: defined useState for passwordError
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  // Step 2: Use useNavigate to create a navigation function
+  const navigate = useNavigate();
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -50,8 +54,8 @@ const Loginpage = () => {
         // Optionally, store user data in local storage or state
         localStorage.setItem('user', JSON.stringify(response.data.data.user));
 
-        // Redirect or update UI after successful login
-        alert("Login successful!");
+        // Redirect to the homepage after successful login
+        navigate('/homepage');  // Step 3: Redirect to the homepage
       } else {
         alert(response.data.message || "Login failed");
       }

@@ -1,102 +1,106 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';  // Step 1: Import useNavigate
 import { signupApi } from "../../apis/Api";
 
 const Registerpage = () => {
-  // States for form fields
-  const [nickname, setNickName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [retypepassword, setRetypePassword] = useState('')
+  const [nickname, setNickName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [retypepassword, setRetypePassword] = useState('');
 
   // States for error messages
-  const [nicknameError, setNickNameError] = useState('')
-  const [emailError, setEmailError] = useState('')
-  const [passwordError, setPasswordError] = useState('')
-  const [retypepasswordError, setRetypePasswordError] = useState('')
+  const [nicknameError, setNickNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [retypepasswordError, setRetypePasswordError] = useState('');
 
-  // Handle input changes
+  // Step 2: Use useNavigate to create a navigation function
+  const navigate = useNavigate();
+
   const handleNickname = (e) => {
-    setNickName(e.target.value)
-    setNickNameError('')
-  }
+    setNickName(e.target.value);
+    setNickNameError('');
+  };
 
   const handleEmail = (e) => {
-    setEmail(e.target.value)
-    setEmailError('')
-  }
+    setEmail(e.target.value);
+    setEmailError('');
+  };
 
   const handlePassword = (e) => {
-    setPassword(e.target.value)
-    setPasswordError('')
-  }
+    setPassword(e.target.value);
+    setPasswordError('');
+  };
 
   const handleRetypepassword = (e) => {
-    setRetypePassword(e.target.value)
-    setRetypePasswordError('')
-  }
+    setRetypePassword(e.target.value);
+    setRetypePasswordError('');
+  };
 
-  // Validation
   const validate = () => {
     let isValid = true;
 
     if (nickname.trim() === '') {
-      setNickNameError("Nickname is Required!")
-      isValid = false
+      setNickNameError("Nickname is Required!");
+      isValid = false;
     }
 
     if (email.trim() === '') {
-      setEmailError("Email is Required!")
-      isValid = false
+      setEmailError("Email is Required!");
+      isValid = false;
     }
 
     if (password.trim() === '') {
-      setPasswordError("Password is Required!")
-      isValid = false
+      setPasswordError("Password is Required!");
+      isValid = false;
     }
 
     if (retypepassword.trim() === '') {
-      setRetypePasswordError("Confirm password is required")
-      isValid = false
+      setRetypePasswordError("Confirm password is required");
+      isValid = false;
     }
 
     if (retypepassword.trim() !== password.trim()) {
-      setRetypePasswordError("Password does not match")
-      isValid = false
+      setRetypePasswordError("Password does not match");
+      isValid = false;
     }
 
     return isValid;
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validate()) return;
-    
+
     try {
       console.log('Sending data:', { nickname, email, password, retypepassword });
-      
+
       const response = await signupApi({ 
         nickname,
         email,
         password,
         retypepassword
       });
-      
+
       console.log('Response:', response);
-      
+
       if (response.data.success) {
         alert("User registered successfully!");
         setNickName('');
         setEmail('');
         setPassword('');
         setRetypePassword('');
+        
+        // Step 3: Redirect to the login page
+        navigate('/login');
       }
     } catch (error) {
       console.error('Error details:', error);
       const errorMessage = error.response?.data?.message || "Registration failed";
       alert(errorMessage);
     }
-};
+  };
 
   return (
     <div className='container mt-2'>
