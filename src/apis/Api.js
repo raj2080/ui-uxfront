@@ -41,7 +41,6 @@ export const loginApi = async (data) => {
             if (user._id) {
                 localStorage.setItem('userId', user._id);
             } else if (user.id) {
-                // Some APIs might return 'id' instead of '_id'
                 localStorage.setItem('userId', user.id);
             }
 
@@ -101,6 +100,53 @@ export const getUserProfile = async () => {
         }
         
         throw error;
+    }
+};
+
+// In your Api.js, add a debug log to check the token and userId
+export const updateUserProfile = async (userData) => {
+    try {
+        // Debug logs
+        console.log('Stored token:', localStorage.getItem('token'));
+        console.log('Stored userId:', localStorage.getItem('userId'));
+        console.log('Update data being sent:', userData);
+
+        const response = await Api.put('users/profile/update', userData);
+        
+        if (response.data && response.data.success) {
+            const updatedUser = response.data.user;
+            
+            // Update stored user data with new information
+            const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+            const newUserData = {
+                ...currentUser,
+                nickname: updatedUser.nickname,
+                email: updatedUser.email,
+                updatedAt: updatedUser.updatedAt
+            };
+            
+            localStorage.setItem('user', JSON.stringify(newUserData));
+        }
+
+        return response;
+    } catch (error) {
+        console.error('Profile update error details:', {
+            message: error.response?.data?.message,
+            status: error.response?.status,
+            data: error.response?.data
+        });
+        
+        if (error.response?.status === 401) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('user');
+        }
+        
+        throw {
+            message: error.response?.data?.message || 'Failed to update profile',
+            status: error.response?.status,
+            data: error.response?.data
+        };
     }
 };
 
