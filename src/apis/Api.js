@@ -1,57 +1,87 @@
 import axios from 'axios';
 
+// Constants
+const API_BASE_URL = 'http://localhost:5000/api';
+const STORAGE_KEYS = {
+    TOKEN: 'token',
+    USER_ID: 'userId',
+    USER: 'user'
+};
+
 // Creating backend configuration
 const Api = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    baseURL: API_BASE_URL,
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json'
     }
 });
 
-// Add request interceptor to include token in all requests
+// Helper Functions
+const clearStorage = () => {
+    Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
+};
+
+const updateStoredUserData = (userData) => {
+    if (!userData) return;
+    
+    const userToStore = {
+        _id: userData._id || userData.id,
+        nickname: userData.nickname,
+        email: userData.email,
+        updatedAt: userData.updatedAt
+    };
+    
+    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(userToStore));
+};
+
+// Request Interceptor
 Api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
     },
+    (error) => Promise.reject(error)
+);
+
+// Response Interceptor
+Api.interceptors.response.use(
+    (response) => response,
     (error) => {
+        if (error.response?.status === 401) {
+            clearStorage();
+            // Optionally redirect to login page
+            // window.location.href = '/login';
+        }
         return Promise.reject(error);
     }
 );
 
-export const signupApi = (data) => Api.post('users/signup', data);
+// API Functions
+export const signupApi = async (data) => {
+    try {
+        const response = await Api.post('users/signup', data);
+        return response;
+    } catch (error) {
+        throw handleApiError(error);
+    }
+};
 
-// Modified login API function to properly handle user data
 export const loginApi = async (data) => {
     try {
         const response = await Api.post('users/login', data);
         
-        // Check if we have a successful response with user data
-        if (response.data && response.data.data) {
+        if (response.data?.data) {
             const { user, token } = response.data.data;
             
-            // Store token
-            localStorage.setItem('token', token);
-            
-            // Store user ID from the response
-            if (user._id) {
-                localStorage.setItem('userId', user._id);
-            } else if (user.id) {
-                localStorage.setItem('userId', user.id);
-            }
+            localStorage.setItem(STORAGE_KEYS.TOKEN, token);
+            localStorage.setItem(STORAGE_KEYS.USER_ID, user._id || user.id);
+            updateStoredUserData(user);
 
-            // Store complete user data
-            localStorage.setItem('user', JSON.stringify({
-                _id: user._id || user.id,
-                nickname: user.nickname,
-                email: user.email
-            }));
-
-            console.log('Stored user data:', {
+            console.log('Login successful:', {
                 userId: user._id || user.id,
                 nickname: user.nickname,
                 email: user.email
@@ -62,105 +92,67 @@ export const loginApi = async (data) => {
 
         return response;
     } catch (error) {
-        console.error('Login error:', error);
-        // Clear any partial data on error
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('user');
-        throw error;
+        clearStorage();
+        throw handleApiError(error);
     }
 };
 
-// Modified get user profile function to handle cases where userId might not be provided
 export const getUserProfile = async () => {
     try {
-        // Get userId from localStorage
-        const userId = localStorage.getItem('userId');
-        
-        if (!userId) {
-            throw new Error('User ID not found. Please login again.');
-        }
+        const userId = localStorage.getItem(STORAGE_KEYS.USER_ID);
+        if (!userId) throw new Error('User ID not found. Please login again.');
 
         const response = await Api.get(`users/profile/${userId}`);
         
-        // Update stored user data with any new information
-        if (response.data && response.data.data) {
-            localStorage.setItem('user', JSON.stringify(response.data.data));
+        if (response.data?.data) {
+            updateStoredUserData(response.data.data);
         }
 
         return response;
     } catch (error) {
-        console.error('Error fetching user profile:', error);
-        
-        // If we get a 401 error, clear the stored data and force re-login
-        if (error.response?.status === 401) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('userId');
-            localStorage.removeItem('user');
-        }
-        
-        throw error;
+        throw handleApiError(error);
     }
 };
 
-// In your Api.js, add a debug log to check the token and userId
 export const updateUserProfile = async (userData) => {
     try {
-        // Debug logs
-        console.log('Stored token:', localStorage.getItem('token'));
-        console.log('Stored userId:', localStorage.getItem('userId'));
-        console.log('Update data being sent:', userData);
+        console.log('Updating profile:', {
+            token: localStorage.getItem(STORAGE_KEYS.TOKEN),
+            userId: localStorage.getItem(STORAGE_KEYS.USER_ID),
+            updateData: userData
+        });
 
         const response = await Api.put('users/profile/update', userData);
         
-        if (response.data && response.data.success) {
-            const updatedUser = response.data.user;
-            
-            // Update stored user data with new information
-            const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-            const newUserData = {
-                ...currentUser,
-                nickname: updatedUser.nickname,
-                email: updatedUser.email,
-                updatedAt: updatedUser.updatedAt
-            };
-            
-            localStorage.setItem('user', JSON.stringify(newUserData));
+        if (response.data?.success) {
+            updateStoredUserData(response.data.user);
         }
 
         return response;
     } catch (error) {
-        console.error('Profile update error details:', {
-            message: error.response?.data?.message,
-            status: error.response?.status,
-            data: error.response?.data
-        });
-        
-        if (error.response?.status === 401) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('userId');
-            localStorage.removeItem('user');
-        }
-        
-        throw {
-            message: error.response?.data?.message || 'Failed to update profile',
-            status: error.response?.status,
-            data: error.response?.data
-        };
+        throw handleApiError(error);
     }
 };
 
-// Utility function to check if user is logged in
-export const isLoggedIn = () => {
-    const token = localStorage.getItem('token');
-    const userId = localStorage.getItem('userId');
-    return !!(token && userId);
+export const changePassword = async (passwordData) => {
+    try {
+        const response = await Api.put('users/change-password', passwordData);
+        return response;
+    } catch (error) {
+        throw handleApiError(error);
+    }
 };
 
-// Utility function to get stored user data
+// Utility Functions
+export const isLoggedIn = () => {
+    const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
+    const userId = localStorage.getItem(STORAGE_KEYS.USER_ID);
+    return Boolean(token && userId);
+};
+
 export const getStoredUserData = () => {
     try {
-        const userData = localStorage.getItem('user');
+        const userData = localStorage.getItem(STORAGE_KEYS.USER);
         return userData ? JSON.parse(userData) : null;
     } catch (error) {
         console.error('Error parsing stored user data:', error);
@@ -168,11 +160,29 @@ export const getStoredUserData = () => {
     }
 };
 
-// Logout function
 export const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('user');
+    clearStorage();
+};
+
+// Error Handler
+const handleApiError = (error) => {
+    console.error('API Error:', error);
+    
+    return {
+        message: error.response?.data?.message || error.message || 'An error occurred',
+        status: error.response?.status,
+        data: error.response?.data,
+        originalError: error
+    };
+};
+
+// Custom Hooks (if using React)
+export const useAuth = () => {
+    return {
+        isLoggedIn: isLoggedIn(),
+        userData: getStoredUserData(),
+        logout,
+    };
 };
 
 export default Api;
