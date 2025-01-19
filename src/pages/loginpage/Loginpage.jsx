@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginApi } from "../../apis/Api";
+import './Loginpage.css';
 
 const Loginpage = ({ onLogin }) => {
   const [email, setEmail] = useState('');

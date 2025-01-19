@@ -1,0 +1,61 @@
+/* src/pages/profile/Profilepage.css */
+.profile-page {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .profile-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+  }
+  
+  .profile-details {
+    margin-top: 2rem;
+  }
+  
+  .profile-info p {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .profile-info strong {
+    min-width: 120px;
+    color: #666;
+  }
+  
+  .profile-value {
+    margin-left: 1rem;
+    color: #333;
+    font-weight: 500;
+  }
+  
+  .profile-actions {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+  }
+  
+  .loading-spinner {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+  }
+  
+  .error-message {
+    text-align: center;
+    color: #dc3545;
+    padding: 2rem;
+  }
+  
+  .error-message h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .error-message button {
+    margin-top: 1rem;
+  }
