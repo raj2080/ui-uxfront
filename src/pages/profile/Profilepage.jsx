@@ -34,11 +34,6 @@ const Profilepage = () => {
     fetchUserProfile();
   }, [navigate]);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
   const formatDate = (dateString) => {
     if (!dateString) return '';
     return new Date(dateString).toLocaleString('en-US', {
@@ -64,12 +59,7 @@ const Profilepage = () => {
       <div className="profile-container">
         <div className="profile-header">
           <h1>My Profile</h1>
-          <button 
-            className="btn btn-outline-danger"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
+         
         </div>
 
         {userData && (

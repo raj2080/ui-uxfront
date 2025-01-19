@@ -8,12 +8,10 @@ import Registerpage from './pages/registerpage/Registerpage';
 import Profilepage from './pages/profile/Profilepage';
 
 function App() {
-  // Initialize authentication state from localStorage
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return !!localStorage.getItem('token');
   });
 
-  // Update auth state when localStorage changes
   useEffect(() => {
     const checkAuth = () => {
       const token = localStorage.getItem('token');
@@ -29,7 +27,6 @@ function App() {
   };
 
   const handleLogout = () => {
-    // Clear all auth data
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('user');
@@ -44,25 +41,25 @@ function App() {
         <Route 
           path="/login" 
           element={
-            isAuthenticated ? 
-            <Navigate to="/profile" /> : 
-            <Loginpage onLogin={handleLogin} />
+            isAuthenticated 
+              ? <Navigate to="/" replace /> 
+              : <Loginpage onLogin={handleLogin} />
           } 
         />
         <Route 
           path="/register" 
           element={
-            isAuthenticated ? 
-            <Navigate to="/profile" /> : 
-            <Registerpage />
+            isAuthenticated 
+              ? <Navigate to="/" replace /> 
+              : <Registerpage />
           } 
         />
         <Route 
           path="/profile" 
           element={
-            isAuthenticated ? 
-            <Profilepage onLogout={handleLogout} /> : 
-            <Navigate to="/login" />
+            isAuthenticated 
+              ? <Profilepage onLogout={handleLogout} /> 
+              : <Navigate to="/login" replace />
           } 
         />
         <Route path="/communities" element={<div>Communities Page</div>} />
