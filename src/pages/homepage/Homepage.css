@@ -1,0 +1,373 @@
+/* Homepage.css */
+.homepage {
+    padding: 2rem;
+    background-color: #f8f9fa;
+}
+
+/* User Info Display */
+.user-info-display {
+    background: white;
+    padding: 1rem 2rem;
+    margin-bottom: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.datetime-display, .user-display {
+    margin: 0;
+    color: #4a5568;
+    font-size: 0.9rem;
+}
+
+.user-display {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+/* Section Styles */
+section {
+    margin-bottom: 4rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+section h2 {
+    color: #2d3748;
+    font-size: 1.8rem;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 0.5rem;
+    margin: 0;
+}
+
+section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background: #667eea;
+    border-radius: 2px;
+}
+
+.view-more-btn {
+    background: none;
+    border: none;
+    color: #667eea;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.view-more-btn:hover {
+    background: #f7fafc;
+    transform: translateX(5px);
+}
+
+.view-more-btn i {
+    transition: transform 0.3s ease;
+}
+
+.view-more-btn:hover i {
+    transform: translateX(5px);
+}
+
+/* Carousel Styles */
+.carousel-wrapper {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+    position: relative;
+}
+
+.carousel-content {
+    display: flex;
+    align-items: stretch;
+    min-height: 400px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.carousel-text {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.carousel-text h3 {
+    font-size: 2rem;
+    color: #2d3748;
+    margin-bottom: 1rem;
+}
+
+.carousel-text p {
+    font-size: 1.2rem;
+    color: #4a5568;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+}
+
+.carousel-image {
+    flex: 1;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+/* Stats Section */
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card i {
+    font-size: 2.5rem;
+    color: #667eea;
+    margin-bottom: 1rem;
+}
+
+.stat-card h3 {
+    font-size: 2rem;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card p {
+    color: #718096;
+    font-size: 1rem;
+}
+
+/* Confession Cards Grid */
+.confessions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.confession-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    min-height: 250px;
+}
+
+.confession-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.confession-card h3 {
+    color: #2d3748;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.confession-card p {
+    color: #4a5568;
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+    font-size: 1.1rem;
+    flex-grow: 1;
+}
+
+/* Meta Information */
+.confession-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #718096;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+    margin-top: auto;
+}
+
+.confession-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.confession-meta i {
+    color: #667eea;
+    font-size: 1.1rem;
+}
+
+/* Carousel Navigation */
+.carousel-indicators {
+    bottom: -3rem;
+}
+
+.carousel-indicators button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 0 5px;
+    background-color: #cbd5e0;
+    border: none;
+}
+
+.carousel-indicators button.active {
+    background-color: #667eea;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 50px;
+    height: 50px;
+    background-color: #667eea;
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.9;
+}
+
+.carousel-control-prev {
+    left: -25px;
+}
+
+.carousel-control-next {
+    right: -25px;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    opacity: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .confessions-grid {
+        gap: 1.5rem;
+    }
+    
+    .confession-card {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .carousel-content {
+        flex-direction: column;
+    }
+
+    .carousel-image {
+        height: 200px;
+        min-height: auto;
+    }
+
+    .carousel-text {
+        padding: 1.5rem;
+    }
+
+    .carousel-text h3 {
+        font-size: 1.5rem;
+    }
+
+    .carousel-text p {
+        font-size: 1rem;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        display: none;
+    }
+
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .confessions-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .homepage {
+        padding: 1rem;
+    }
+
+    .user-info-display {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+
+    section h2 {
+        font-size: 1.5rem;
+    }
+
+    .section-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .view-more-btn {
+        align-self: flex-end;
+    }
+}
+
+@media (max-width: 576px) {
+    .carousel-text h3 {
+        font-size: 1.3rem;
+    }
+
+    .carousel-text p {
+        font-size: 0.95rem;
+    }
+
+    .confession-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .confession-card p {
+        font-size: 1rem;
+    }
+}

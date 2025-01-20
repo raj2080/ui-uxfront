@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* Add these styles to ensure footer stays at bottom */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1 0 auto;
+}

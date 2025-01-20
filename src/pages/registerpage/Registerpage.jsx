@@ -1,12 +1,15 @@
+// Registerpage.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Step 1: Import useNavigate
+import { useNavigate, Link } from 'react-router-dom';
 import { signupApi } from "../../apis/Api";
+import './Registerpage.css';
 
 const Registerpage = () => {
   const [nickname, setNickName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [retypepassword, setRetypePassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // States for error messages
   const [nicknameError, setNickNameError] = useState('');
@@ -14,7 +17,6 @@ const Registerpage = () => {
   const [passwordError, setPasswordError] = useState('');
   const [retypepasswordError, setRetypePasswordError] = useState('');
 
-  // Step 2: Use useNavigate to create a navigation function
   const navigate = useNavigate();
 
   const handleNickname = (e) => {
@@ -48,10 +50,16 @@ const Registerpage = () => {
     if (email.trim() === '') {
       setEmailError("Email is Required!");
       isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      setEmailError("Please enter a valid email address");
+      isValid = false;
     }
 
     if (password.trim() === '') {
       setPasswordError("Password is Required!");
+      isValid = false;
+    } else if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long");
       isValid = false;
     }
 
@@ -61,7 +69,7 @@ const Registerpage = () => {
     }
 
     if (retypepassword.trim() !== password.trim()) {
-      setRetypePasswordError("Password does not match");
+      setRetypePasswordError("Passwords do not match");
       isValid = false;
     }
 
@@ -74,8 +82,7 @@ const Registerpage = () => {
     if (!validate()) return;
 
     try {
-      console.log('Sending data:', { nickname, email, password, retypepassword });
-
+      setLoading(true);
       const response = await signupApi({ 
         nickname,
         email,
@@ -83,82 +90,116 @@ const Registerpage = () => {
         retypepassword
       });
 
-      console.log('Response:', response);
-
       if (response.data.success) {
-        alert("User registered successfully!");
+        // Clear form
         setNickName('');
         setEmail('');
         setPassword('');
         setRetypePassword('');
         
-        // Step 3: Redirect to the login page
+        // Show success message and redirect
+        alert("Registration successful! Please login.");
         navigate('/login');
       }
     } catch (error) {
-      console.error('Error details:', error);
+      console.error('Registration error:', error);
       const errorMessage = error.response?.data?.message || "Registration failed";
       alert(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className='container mt-2'>
-      <h1>Create an Account!</h1>
-
-      <form className='w-50' onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label>NickName</label>
-          <input 
-            type="text" 
-            className='form-control'
-            value={nickname}
-            onChange={handleNickname}
-            placeholder='Enter your Nickname'
-          />
-          {nicknameError && <p className='text-danger'>{nicknameError}</p>}
+    <div className="register-container">
+      <div className="register-box">
+        <div className="register-header">
+          <h1>Create Account</h1>
+          <p>Please fill in the form to continue</p>
         </div>
 
-        <div className="mb-3">
-          <label>Email</label>
-          <input 
-            type="email"
-            className='form-control'
-            value={email}
-            onChange={handleEmail}
-            placeholder='Enter your Email'
-          />
-          {emailError && <p className='text-danger'>{emailError}</p>}
-        </div>
+        <form onSubmit={handleSubmit} className="register-form">
+          <div className="form-group">
+            <label htmlFor="nickname">
+              <i className="fas fa-user"></i>
+              Nickname
+            </label>
+            <input
+              type="text"
+              id="nickname"
+              value={nickname}
+              onChange={handleNickname}
+              placeholder="Enter your nickname"
+              className={`form-input ${nicknameError ? 'error' : ''}`}
+            />
+            {nicknameError && <span className="error-text">{nicknameError}</span>}
+          </div>
 
-        <div className="mb-3">
-          <label>Password</label>
-          <input 
-            type="password"
-            className='form-control'
-            value={password}
-            onChange={handlePassword}
-            placeholder='Enter your Password'
-          />
-          {passwordError && <p className='text-danger'>{passwordError}</p>}
-        </div>
+          <div className="form-group">
+            <label htmlFor="email">
+              <i className="fas fa-envelope"></i>
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={handleEmail}
+              placeholder="Enter your email"
+              className={`form-input ${emailError ? 'error' : ''}`}
+            />
+            {emailError && <span className="error-text">{emailError}</span>}
+          </div>
 
-        <div className="mb-3">
-          <label>Re-type Password</label>
-          <input 
-            type="password"
-            className='form-control'
-            value={retypepassword}
-            onChange={handleRetypepassword}
-            placeholder='Confirm your password'
-          />
-          {retypepasswordError && <p className='text-danger'>{retypepasswordError}</p>}
-        </div>
+          <div className="form-group">
+            <label htmlFor="password">
+              <i className="fas fa-lock"></i>
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={handlePassword}
+              placeholder="Enter your password"
+              className={`form-input ${passwordError ? 'error' : ''}`}
+            />
+            {passwordError && <span className="error-text">{passwordError}</span>}
+          </div>
 
-        <button type="submit" className='btn btn-dark w-100'>
-          Create an Account
-        </button>
-      </form>
+          <div className="form-group">
+            <label htmlFor="retypepassword">
+              <i className="fas fa-lock"></i>
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              id="retypepassword"
+              value={retypepassword}
+              onChange={handleRetypepassword}
+              placeholder="Confirm your password"
+              className={`form-input ${retypepasswordError ? 'error' : ''}`}
+            />
+            {retypepasswordError && <span className="error-text">{retypepasswordError}</span>}
+          </div>
+
+          <button 
+            type="submit" 
+            className={`register-button ${loading ? 'loading' : ''}`}
+            disabled={loading}
+          >
+            {loading ? (
+              <span className="loading-spinner"></span>
+            ) : (
+              'Create Account'
+            )}
+          </button>
+        </form>
+
+        <div className="register-footer">
+          <p>Already have an account? <Link to="/login">Sign in</Link></p>
+        </div>
+      </div>
     </div>
   );
 }

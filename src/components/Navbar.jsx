@@ -1,102 +1,115 @@
 // Navbar.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 const Navbar = ({ isAuthenticated, onLogout }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchFocused, setSearchFocused] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
     onLogout();
     navigate('/login');
+    setIsOpen(false);
+  };
+
+  const toggleNavbar = () => {
+    setIsOpen(!isOpen);
   };
 
   return (
-    <div className='container'>
-      <nav className="navbar navbar-expand-lg bg-body-tertiary">
-        <div className="container-fluid">
-          <Link className="navbar-brand" to="/">
-            Confess <span className='text-danger'>here</span>
+    <nav className="modern-navbar">
+      <div className="navbar-container">
+        {/* Left Section */}
+        <div className="navbar-left">
+          <Link to="/" className="navbar-brand">
+            Confess <span className="brand-highlight">here</span>
           </Link>
-          
-          <button 
-            className="navbar-toggler" 
-            type="button" 
-            data-bs-toggle="collapse" 
-            data-bs-target="#navbarSupportedContent" 
-            aria-controls="navbarSupportedContent" 
-            aria-expanded="false" 
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <form className="d-flex mx-auto me-5" role="search">
-              <div className="input-group">
-                <input 
-                  className="form-control" 
-                  style={{ width: '400px' }} 
-                  type="search" 
-                  placeholder="Search" 
-                  aria-label="Search" 
-                />
-                <button className="btn btn-outline-secondary" type="button">
-                  <i className="fas fa-search"></i>
-                </button>
-              </div>
-            </form>
-            
-            <ul className="navbar-nav mx-3 me-5 mb-lg-0">
-              <li className="nav-item">
-                <Link className="nav-link" to="/communities">Communities</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/contact">Contact us</Link>
-              </li>
-              {isAuthenticated && (
-                <>
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/profile">Profile</Link>
-                  </li>
-                  <li className="nav-item">
-                    <button 
-                      onClick={handleLogout}
-                      className="btn btn-outline-danger ms-2"
-                    >
-                      Logout
-                    </button>
-                  </li>
-                </>
-              )}
-            </ul>
-            
-            {!isAuthenticated && (
-              <ul className="navbar-nav ms-2 mb-2 mb-lg-0">
-                <li className="nav-item">
-                  <Link 
-                    to='/register' 
-                    className="btn btn-success me-2" 
-                    type="button"
-                  >
-                    Register
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link 
-                    to='/login' 
-                    className="btn btn-primary" 
-                    type="button"
-                  >
-                    Login
-                  </Link>
-                </li>
-              </ul>
-            )}
+        </div>
+
+        {/* Center Section */}
+        <div className="navbar-center">
+          <div className={`search-container ${searchFocused ? 'focused' : ''}`}>
+            <input
+              type="search"
+              placeholder="Search..."
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setSearchFocused(false)}
+              className="search-input"
+            />
+            <button className="search-button">
+              <i className="fas fa-search"></i>
+            </button>
           </div>
         </div>
-      </nav>
-    </div>
+
+        {/* Right Section */}
+        <div className="navbar-right">
+          <div className="nav-links">
+            <Link to="/communities" className="nav-link">
+              <i className="fas fa-users"></i>
+              Communities
+            </Link>
+            <Link to="/contact" className="nav-link">
+              <i className="fas fa-envelope"></i>
+              Contact us
+            </Link>
+          </div>
+
+          {isAuthenticated ? (
+            <div className="auth-nav">
+              <Link to="/profile" className="nav-link profile-link">
+                <i className="fas fa-user"></i>
+                Profile
+              </Link>
+              <button onClick={handleLogout} className="logout-button">
+                <i className="fas fa-sign-out-alt"></i>
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" className="get-started-button">
+              Get Started
+            </Link>
+          )}
+        </div>
+
+        {/* Mobile Menu Button */}
+        <button 
+          className={`navbar-toggler ${isOpen ? 'active' : ''}`} 
+          onClick={toggleNavbar}
+        >
+          <span className="toggler-icon"></span>
+          <span className="toggler-icon"></span>
+          <span className="toggler-icon"></span>
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      <div className={`mobile-menu ${isOpen ? 'show' : ''}`}>
+        <div className="search-container">
+          <input
+            type="search"
+            placeholder="Search..."
+            className="search-input"
+          />
+          <button className="search-button">
+            <i className="fas fa-search"></i>
+          </button>
+        </div>
+        <Link to="/communities" className="mobile-link">Communities</Link>
+        <Link to="/contact" className="mobile-link">Contact us</Link>
+        {isAuthenticated ? (
+          <>
+            <Link to="/profile" className="mobile-link">Profile</Link>
+            <button onClick={handleLogout} className="mobile-logout-button">Logout</button>
+          </>
+        ) : (
+          <Link to="/login" className="mobile-get-started">Get Started</Link>
+        )}
+      </div>
+    </nav>
   );
 };
 

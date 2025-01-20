@@ -1,114 +1,172 @@
+// Loginpage.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // Add Link import
 import { loginApi } from "../../apis/Api";
 import './Loginpage.css';
 
 const Loginpage = ({ onLogin }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+    general: ''
+  });
 
-  // States for error messages
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-
-  // Use useNavigate to create a navigation function
   const navigate = useNavigate();
 
-  const handleEmail = (e) => {
-    setEmail(e.target.value);
-    setEmailError('');
-  };
-
-  const handlePassword = (e) => {
-    setPassword(e.target.value);
-    setPasswordError('');
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    // Clear error when user starts typing
+    setErrors(prev => ({
+      ...prev,
+      [name]: '',
+      general: ''
+    }));
   };
 
   const validate = () => {
-    let isValid = true;
-
-    if (email.trim() === '') {
-      setEmailError("Email is Required!");
-      isValid = false;
+    const newErrors = {};
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email is invalid";
     }
 
-    if (password.trim() === '') {
-      setPasswordError("Password is Required!");
-      isValid = false;
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
     }
 
-    return isValid;
+    setErrors(prev => ({
+      ...prev,
+      ...newErrors
+    }));
+
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (!validate()) return;
 
     try {
-      const response = await loginApi({ email, password });
+      setLoading(true);
+      const response = await loginApi(formData);
 
       if (response.data.success) {
         // Store the JWT token in local storage or cookies
         localStorage.setItem('token', response.data.data.token);
-
-        // Optionally, store user data in local storage or state
         localStorage.setItem('user', JSON.stringify(response.data.data.user));
-
+        
         // Update authentication status
         onLogin();
-
-        // Redirect to the homepage after successful login
         navigate('/');
-      } else {
-        alert(response.data.message || "Login failed");
       }
     } catch (error) {
-      console.error('Error details:', error);
-      const errorMessage = error.response?.data?.message || "Login failed";
-      alert(errorMessage);
+      console.error('Login error:', error);
+      setErrors(prev => ({
+        ...prev,
+        general: error.message || 'Login failed. Please try again.'
+      }));
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className='container mt-2'>
-      <h1>Welcome Back</h1>
-
-      <form className='w-50' onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label>Email</label>
-          <input 
-            type="email"
-            className='form-control'
-            value={email}
-            onChange={handleEmail}
-            placeholder='Enter your Email'
-          />
-          {emailError && <p className='text-danger'>{emailError}</p>}
+    <div className="login-container">
+      <div className="login-box">
+        <div className="login-header">
+          <h1>Welcome Back</h1>
+          <p>Please sign in to continue</p>
         </div>
 
-        <div className="mb-3">
-          <label>Password</label>
-          <input 
-            type="password"
-            className='form-control'
-            value={password}
-            onChange={handlePassword}
-            placeholder='Enter your Password'
-          />
-          {passwordError && <p className='text-danger'>{passwordError}</p>}
+        <form onSubmit={handleSubmit} className="login-form">
+          {errors.general && (
+            <div className="error-message">
+              <i className="fas fa-exclamation-circle"></i>
+              <span>{errors.general}</span>
+            </div>
+          )}
+
+          <div className="form-group">
+            <label htmlFor="email">
+              <i className="fas fa-envelope"></i>
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="Enter your email"
+              className={`form-input ${errors.email ? 'error' : ''}`}
+            />
+            {errors.email && <span className="error-text">{errors.email}</span>}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">
+              <i className="fas fa-lock"></i>
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              placeholder="Enter your password"
+              className={`form-input ${errors.password ? 'error' : ''}`}
+            />
+            {errors.password && <span className="error-text">{errors.password}</span>}
+          </div>
+
+          <div className="form-options">
+            <label className="remember-me">
+              <input type="checkbox" />
+              <span>Remember me</span>
+            </label>
+            <a href="/forgot-password" className="forgot-password">
+              Forgot Password?
+            </a>
+          </div>
+
+          <button 
+            type="submit" 
+            className={`login-button ${loading ? 'loading' : ''}`}
+            disabled={loading}
+          >
+            {loading ? (
+              <span className="loading-spinner"></span>
+            ) : (
+              'Sign In'
+            )}
+          </button>
+        </form>
+
+        <div className="login-footer">
+          <p>Don't have an account? {' '}
+            <Link to="/register" className="signup-link">
+              Sign up
+            </Link>
+          </p>
         </div>
 
-        <button type="submit" className='btn btn-dark w-100'>
-          Login
-        </button>
-      </form>
+      </div>
     </div>
   );
 };
 
 export default Loginpage;
-
-
-
-
