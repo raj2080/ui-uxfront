@@ -22,6 +22,7 @@
 .navbar-left {
   display: flex;
   align-items: center;
+  gap: 1.5rem;
 }
 
 .navbar-brand {
@@ -35,6 +36,29 @@
 .brand-highlight {
   color: #e53e3e;
   font-weight: 800;
+}
+
+/* Create Confession Button */
+.create-confession-btn {
+  background: #48bb78;
+  color: white;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.create-confession-btn:hover {
+  background: #38a169;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.2);
 }
 
 /* Center Section */
@@ -116,6 +140,18 @@
   margin-left: 1rem;
 }
 
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #edf2f7;
+  border-radius: 6px;
+  color: #4a5568;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
 .profile-link {
   margin-right: 0.5rem;
 }
@@ -170,6 +206,32 @@
   display: none;
 }
 
+.mobile-create-confession {
+  background: #48bb78;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 6px;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.mobile-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: #edf2f7;
+  border-radius: 6px;
+  color: #4a5568;
+  font-weight: 500;
+}
+
 @media (max-width: 1200px) {
   .search-container {
     width: 400px;
@@ -177,6 +239,14 @@
 
   .nav-links {
     gap: 1rem;
+  }
+
+  .navbar-left {
+    gap: 1rem;
+  }
+
+  .create-confession-btn {
+    padding: 0.5rem 1rem;
   }
 }
 
@@ -194,6 +264,10 @@
   }
 
   .navbar-right {
+    display: none;
+  }
+
+  .create-confession-btn {
     display: none;
   }
 
@@ -232,6 +306,9 @@
     text-decoration: none;
     padding: 0.75rem 0;
     font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .mobile-get-started {
@@ -242,6 +319,10 @@
     text-align: center;
     text-decoration: none;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
   }
 
   .mobile-logout-button {
@@ -253,6 +334,10 @@
     width: 100%;
     cursor: pointer;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
   }
 }
 

@@ -6,22 +6,35 @@ import "./Homepage.css";
 const Homepage = () => {
     const [currentDateTime, setCurrentDateTime] = useState('');
     const [userData, setUserData] = useState(null);
-    const [currentUser, setCurrentUser] = useState('2025raj'); // Added current user
+    const [currentUser, setCurrentUser] = useState(''); // Added current user
 
     useEffect(() => {
         const updateDateTime = () => {
             const now = new Date();
-            const formattedDateTime = now.toISOString().slice(0, 19).replace('T', ' ');
-            setCurrentDateTime(formattedDateTime);
+            const year = now.getUTCFullYear();
+            const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(now.getUTCDate()).padStart(2, '0');
+            const hours = String(now.getUTCHours()).padStart(2, '0');
+            const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+            const seconds = String(now.getUTCSeconds()).padStart(2, '0');
+            
+            setCurrentDateTime(`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`);
         };
 
         updateDateTime();
         const timer = setInterval(updateDateTime, 1000);
 
         // Get user data from localStorage
-        const storedUser = JSON.parse(localStorage.getItem('user'));
-        if (storedUser) {
-            setUserData(storedUser);
+        try {
+            const storedUser = localStorage.getItem('user');
+            if (storedUser) {
+                const userData = JSON.parse(storedUser);
+                setUserData(userData);
+                setCurrentUser(userData.nickname || 'anonymous');
+            }
+        } catch (error) {
+            console.error('Error getting user data:', error);
+            setCurrentUser('anonymous');
         }
 
         return () => clearInterval(timer);
@@ -199,7 +212,7 @@ const Homepage = () => {
             </div>
 
             <section className="top-confessions-section">
-                <h2>Top Confessions from Communities</h2>
+                <h2>Top 7 Confessions from Communities</h2>
                 <div className="carousel-wrapper">
                     <div id="topConfessionsCarousel" className="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
                         <div className="carousel-indicators">
