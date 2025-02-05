@@ -1,7 +1,8 @@
-// Loginpage.jsx
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // Add Link import
+import { useNavigate, Link } from 'react-router-dom';
 import { loginApi } from "../../apis/Api";
+import { toast } from 'react-toastify';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner'; // Corrected import path
 import './Loginpage.css';
 
 const Loginpage = ({ onLogin }) => {
@@ -24,7 +25,6 @@ const Loginpage = ({ onLogin }) => {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
     setErrors(prev => ({
       ...prev,
       [name]: '',
@@ -64,19 +64,17 @@ const Loginpage = ({ onLogin }) => {
       const response = await loginApi(formData);
 
       if (response.data.success) {
-        // Store the JWT token in local storage or cookies
         localStorage.setItem('token', response.data.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.data.user));
-        
-        // Update authentication status
         onLogin();
         navigate('/');
       }
     } catch (error) {
       console.error('Login error:', error);
+      toast.error(error.response?.data?.message || 'Login failed. Please try again.');
       setErrors(prev => ({
         ...prev,
-        general: error.message || 'Login failed. Please try again.'
+        general: error.response?.data?.message || 'Invalid email or password'
       }));
     } finally {
       setLoading(false);
@@ -138,9 +136,9 @@ const Loginpage = ({ onLogin }) => {
               <input type="checkbox" />
               <span>Remember me</span>
             </label>
-            <a href="/forgot-password" className="forgot-password">
+            <Link to="/forgot-password" className="forgot-password">
               Forgot Password?
-            </a>
+            </Link>
           </div>
 
           <button 
@@ -149,7 +147,7 @@ const Loginpage = ({ onLogin }) => {
             disabled={loading}
           >
             {loading ? (
-              <span className="loading-spinner"></span>
+              <LoadingSpinner fullScreen={false} /> // Use the LoadingSpinner component
             ) : (
               'Sign In'
             )}

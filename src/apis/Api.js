@@ -1,4 +1,3 @@
-// src/apis/Api.js
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -234,7 +233,7 @@ export const createConfession = async (confessionData) => {
 
 export const getAllConfessions = async (page = 1, limit = 10) => {
     try {
-        const response = await Api.get(`/confessions/all?page=${page}&limit=${limit}`);
+        const response = await Api.get(`users/confessions/all?page=${page}&limit=${limit}`);
         return response;
     } catch (error) {
         throw handleApiError(error);
@@ -243,7 +242,7 @@ export const getAllConfessions = async (page = 1, limit = 10) => {
 
 export const getUserConfessions = async () => {
     try {
-        const response = await Api.get('/confessions/my');
+        const response = await Api.get('users/confessions/my');
         return response;
     } catch (error) {
         throw handleApiError(error);
@@ -269,7 +268,7 @@ export const updateConfession = async (id, confessionData) => {
             formData.append('image', confessionData.image);
         }
 
-        const response = await Api.put(`/confessions/${id}`, formData, {
+        const response = await Api.put(`users/confessions/${id}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -287,9 +286,30 @@ export const updateConfession = async (id, confessionData) => {
 
 export const deleteConfession = async (id) => {
     try {
-        const response = await Api.delete(`/confessions/${id}`);
+        const response = await Api.delete(`users/confessions/${id}`);
         if (response.data?.success) {
             toast.success('Confession deleted successfully!');
+        }
+        return response;
+    } catch (error) {
+        throw handleApiError(error);
+    }
+};
+
+// Contact Us API Function
+export const submitContactUs = async (contactData) => {
+    try {
+        // Validate required fields
+        const requiredFields = ['name', 'phonenumber', 'email', 'subject', 'message', 'category'];
+        for (const field of requiredFields) {
+            if (!contactData[field]) {
+                throw new Error(`${field.charAt(0).toUpperCase() + field.slice(1)} is required`);
+            }
+        }
+
+        const response = await Api.post('/users/contactUs', contactData);
+        if (response.data?.success) {
+            toast.success('ContactUs form submitted successfully!');
         }
         return response;
     } catch (error) {

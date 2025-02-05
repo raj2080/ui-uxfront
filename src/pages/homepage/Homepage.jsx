@@ -30,11 +30,18 @@ const Homepage = () => {
             if (storedUser) {
                 const userData = JSON.parse(storedUser);
                 setUserData(userData);
-                setCurrentUser(userData.nickname || 'anonymous');
+                setCurrentUser(userData.nickname );
+                
+                
             }
+            
+                else{
+                    setCurrentUser('Hello Guest');
+                }
+            
         } catch (error) {
             console.error('Error getting user data:', error);
-            setCurrentUser('anonymous');
+            setCurrentUser('Hello Guest');
         }
 
         return () => clearInterval(timer);
@@ -42,9 +49,9 @@ const Homepage = () => {
 
     // Sample data for stats
     const stats = {
-        totalPosts: 15234,
-        activeMembers: 5678,
-        communities: 89
+        totalPosts: 15,
+        activeMembers: 5,
+        communities: 4
     };
 
     // Top 7 confessions data

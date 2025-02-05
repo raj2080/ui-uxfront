@@ -1,123 +1,150 @@
-/* Profilepage.css */
+/* General Styles */
 .profile-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .profile-container {
-  max-width: 800px;
-  margin: 0 auto;
   background: white;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
   padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 1000px; /* Increase the max-width */
+  width: 100%;
 }
 
+/* Profile Header */
 .profile-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center; /* Align items in the center */
   margin-bottom: 2rem;
-  padding-bottom: 2rem;
-  border-bottom: 2px solid #f0f2f5;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e2e8f0;
 }
 
 .header-content h1 {
   color: #2d3748;
-  font-size: 2.5rem;
   margin-bottom: 1rem;
-  font-weight: 700;
+  font-size: 2rem;
+  font-weight: 600;
 }
 
 .current-info {
   margin-top: 1rem;
 }
 
-.current-user {
-  color: #4a5568;
-  font-size: 1.1rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-}
-
+.current-user,
 .current-datetime {
-  color: #718096;
+  font-family: 'Roboto Mono', monospace;
+  color: #4a5568;
   font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  display: block;
+  border: 1px solid #e2e8f0;
 }
 
-.edit-button {
-  background: #667eea;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 10px;
+/* Main Layout */
+.main-layout {
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.main-content {
+  flex: 1;
+}
+
+/* Right Sidebar */
+.right-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: sticky;
+  top: 2rem;
+  height: 100vh; /* Ensure the sidebar has a fixed height */
+}
+
+/* Sidebar Buttons */
+.sidebar-button {
+  padding: 1.25rem;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  color: #4a5568;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  text-align: left;
+  font-size: 1rem;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.edit-button:hover {
-  background: #5a67d8;
+.sidebar-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+  border-color: #667eea;
+  color: #667eea;
 }
 
+.sidebar-button.active {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+/* Profile Details Styles */
 .profile-details {
-  background: #f8fafc;
-  border-radius: 15px;
+  background: #fff;
+  border-radius: 12px;
   padding: 2rem;
-  margin-bottom: 2rem;
-}
-
-.profile-info {
-  display: grid;
-  gap: 1.5rem;
+  margin-top: 2rem;
 }
 
 .info-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .info-group label {
+  display: block;
   color: #4a5568;
-  font-size: 0.9rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
 }
 
 .info-group p {
   color: #2d3748;
-  font-size: 1.1rem;
-  padding: 0.75rem;
-  background: white;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
+  font-size: 1rem;
+  padding: 0.5rem 0;
 }
 
+/* Form Styles */
 .profile-form {
-  display: grid;
-  gap: 1.5rem;
+  max-width: 600px;
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
   color: #4a5568;
-  font-size: 0.9rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .form-group input {
+  width: 100%;
   padding: 0.75rem;
   border: 2px solid #e2e8f0;
   border-radius: 8px;
@@ -127,17 +154,24 @@
 
 .form-group input:focus {
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
   outline: none;
 }
 
+.form-group input:disabled {
+  background-color: #f7fafc;
+  cursor: not-allowed;
+}
+
+/* Button Styles */
 .form-actions {
   display: flex;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 
-.save-button, .cancel-button {
+.save-button,
+.cancel-button {
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
@@ -154,7 +188,6 @@
 .save-button:hover:not(:disabled) {
   background: #5a67d8;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
 }
 
 .cancel-button {
@@ -165,15 +198,15 @@
 
 .cancel-button:hover:not(:disabled) {
   background: #f7fafc;
-  border-color: #cbd5e0;
+  border-color: #667eea;
+  color: #667eea;
 }
 
 /* Password Section Styles */
 .password-section {
-  background: #f8fafc;
-  border-radius: 15px;
-  padding: 2rem;
   margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e2e8f0;
 }
 
 .section-header {
@@ -190,10 +223,10 @@
 }
 
 .toggle-password-button {
+  padding: 0.75rem 1.5rem;
   background: #667eea;
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
@@ -203,38 +236,54 @@
 .toggle-password-button:hover {
   background: #5a67d8;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
 }
 
-.password-form {
-  margin-top: 1.5rem;
-}
-
-.success-message {
-  background-color: #c6f6d5;
-  border: 1px solid #68d391;
-  color: #2f855a;
-  padding: 1rem;
+/* Edit Button */
+.edit-button {
+  padding: 0.75rem 1.5rem;
+  background: #667eea;
+  color: white;
+  border: none;
   border-radius: 8px;
-  margin-bottom: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0; /* Align with "My Profile" */
+  align-self: flex-start; /* Align button with header */
 }
 
+.edit-button:hover {
+  background: #5a67d8;
+  transform: translateY(-2px);
+}
+
+/* Message Styles */
 .error-message {
-  background-color: #fed7d7;
+  background: #fed7d7;
   border: 1px solid #fc8181;
   color: #c53030;
   padding: 1rem;
   border-radius: 8px;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
+}
+
+.success-message {
+  background: #c6f6d5;
+  border: 1px solid #68d391;
+  color: #2f855a;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
 }
 
 /* Loading Spinner */
 .loading-spinner {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  min-height: 200px;
   gap: 1rem;
-  padding: 2rem;
 }
 
 .spinner {
@@ -251,48 +300,103 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .profile-page {
-    padding: 1rem;
-  }
-
-  .profile-container {
-    padding: 1.5rem;
-  }
-
-  .profile-header {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .header-content h1 {
-    font-size: 2rem;
-  }
-
-  .form-actions {
-    flex-direction: column;
-  }
-
-  .save-button, .cancel-button {
-    width: 100%;
-  }
+/* Confessions List and Card */
+.confessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
-/* Disabled State Styles */
-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none !important;
-  box-shadow: none !important;
+.confession-card {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  max-width: 800px; /* Increase the max-width */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align content to the left */
 }
 
-/* Input focus and hover states */
-input:hover {
-  border-color: #cbd5e0;
+.confession-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  align-self: center; /* Center align image */
 }
 
-input:disabled {
-  background-color: #f7fafc;
-  cursor: not-allowed;
+.confession-divider {
+  width: 100%;
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 10px 0;
+}
+
+.confession-title {
+  font-size: 1.75em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: left; /* Align text to the left */
+}
+
+.confession-text {
+  color: #2d3748;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  text-align: left; /* Align text to the left */
+}
+
+.confession-meta {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.confession-date {
+  font-family: 'Roboto Mono', monospace;
+}
+
+.no-confessions {
+  text-align: center;
+  font-size: 1.2em;
+  color: #888;
+  padding: 2rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px dashed #e2e8f0;
+}
+
+.confession-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.delete-button {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  margin-left: auto; /* This pushes the delete button to the right */
+}
+
+.delete-button:hover {
+  background-color: #ff1a1a;
+}
+
+.edit-button {
+  margin-right: 50px; /* Add space between the edit and delete buttons */
 }

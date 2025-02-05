@@ -1,4 +1,3 @@
-// App.js
 import React, { useState, useEffect, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -15,8 +14,9 @@ const Loginpage = React.lazy(() => import('./pages/loginpage/Loginpage'));
 const Registerpage = React.lazy(() => import('./pages/registerpage/Registerpage'));
 const Profilepage = React.lazy(() => import('./pages/profile/Profilepage'));
 const Communities = React.lazy(() => import('./pages/communities/Communities'));
-const ContactUs = React.lazy(() => import('./pages/contact/ContactUs'));
+const ContactUs = React.lazy(() => import('./pages/contactus/ContactUs'));
 const CreateConfession = React.lazy(() => import('./pages/confession/CreateConfession'));
+const EditConfession = React.lazy(() => import('./pages/confession/EditConfession')); // Newly added component
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -152,6 +152,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <CreateConfession user={currentUser} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/edit-confession/:id"
+                element={
+                  <ProtectedRoute>
+                    <EditConfession user={currentUser} />
                   </ProtectedRoute>
                 }
               />
