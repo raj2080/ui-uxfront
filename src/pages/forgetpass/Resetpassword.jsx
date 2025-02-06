@@ -6,47 +6,87 @@ import './Resetpassword.css';
 const ResetPassword = () => {
     const { token } = useParams();
     const navigate = useNavigate();
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [formData, setFormData] = useState({
+        newPassword: '',
+        confirmPassword: ''
+    });
     const [error, setError] = useState('');
-    const [message, setMessage] = useState('');
+    const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [passwordErrors, setPasswordErrors] = useState({
+        length: false,
+        uppercase: false,
+        lowercase: false,
+        number: false,
+        special: false
+    });
 
-    const handlePasswordChange = (e) => {
-        setNewPassword(e.target.value);
-        setError('');
-        setMessage('');
+    const validatePassword = (password) => {
+        const errors = {
+            length: password.length >= 8,
+            uppercase: /[A-Z]/.test(password),
+            lowercase: /[a-z]/.test(password),
+            number: /\d/.test(password),
+            special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+        };
+        setPasswordErrors(errors);
+        return Object.values(errors).every(Boolean);
     };
 
-    const handleConfirmPasswordChange = (e) => {
-        setConfirmPassword(e.target.value);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+
+        if (name === 'newPassword') {
+            validatePassword(value);
+        }
+
         setError('');
-        setMessage('');
+        setSuccess(false);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+        setSuccess(false);
 
-        if (!newPassword || !confirmPassword) {
+        if (!formData.newPassword || !formData.confirmPassword) {
             setError('Both password fields are required');
             return;
         }
 
-        if (newPassword !== confirmPassword) {
+        if (!validatePassword(formData.newPassword)) {
+            setError('Password does not meet all requirements');
+            return;
+        }
+
+        if (formData.newPassword !== formData.confirmPassword) {
             setError('Passwords do not match');
             return;
         }
 
         try {
             setLoading(true);
-            const response = await resetPasswordApi(token, newPassword);
-
-            setMessage(response.data.message);
-            setTimeout(() => {
-                navigate('/login');
-            }, 3000);
-        } catch (error) {
-            setError(error.response?.data?.message || 'Something went wrong. Please try again.');
+            const result = await resetPasswordApi(token, formData.newPassword);
+            
+            if (result.success) {
+                setSuccess(true);
+                setFormData({
+                    newPassword: '',
+                    confirmPassword: ''
+                });
+                navigate('/login', { 
+                    state: { 
+                        message: 'Password reset successful! Please login with your new password.',
+                        type: 'success'
+                    }
+                });
+            }
+        } catch (err) {
+            setError(err.message || 'Something went wrong. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -69,11 +109,33 @@ const ResetPassword = () => {
                         <input
                             type="password"
                             id="newPassword"
-                            value={newPassword}
-                            onChange={handlePasswordChange}
+                            name="newPassword"
+                            value={formData.newPassword}
+                            onChange={handleChange}
                             placeholder="Enter your new password"
                             className={`form-input ${error ? 'error' : ''}`}
+                            autoComplete="new-password"
                         />
+                        <div className="password-requirements">
+                            <p>Password must contain:</p>
+                            <ul>
+                                <li className={passwordErrors.length ? 'valid' : 'invalid'}>
+                                    At least 8 characters
+                                </li>
+                                <li className={passwordErrors.uppercase ? 'valid' : 'invalid'}>
+                                    At least one uppercase letter
+                                </li>
+                                <li className={passwordErrors.lowercase ? 'valid' : 'invalid'}>
+                                    At least one lowercase letter
+                                </li>
+                                <li className={passwordErrors.number ? 'valid' : 'invalid'}>
+                                    At least one number
+                                </li>
+                                <li className={passwordErrors.special ? 'valid' : 'invalid'}>
+                                    At least one special character (!@#$%^&*(),.?":{}|&lt;&gt;)
+                                </li>
+                            </ul>
+                        </div>
                     </div>
 
                     <div className="form-group">
@@ -84,13 +146,17 @@ const ResetPassword = () => {
                         <input
                             type="password"
                             id="confirmPassword"
-                            value={confirmPassword}
-                            onChange={handleConfirmPasswordChange}
+                            name="confirmPassword"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
                             placeholder="Confirm your new password"
                             className={`form-input ${error ? 'error' : ''}`}
+                            autoComplete="new-password"
                         />
-                        {error && <span className="error-text">{error}</span>}
                     </div>
+
+                    {error && <div className="error-message">{error}</div>}
+                    {success && <div className="success-message">Password reset successful! Redirecting to login...</div>}
 
                     <button 
                         type="submit" 
@@ -104,8 +170,6 @@ const ResetPassword = () => {
                         )}
                     </button>
                 </form>
-
-                {message && <div className="success-message">{message}</div>}
             </div>
         </div>
     );
