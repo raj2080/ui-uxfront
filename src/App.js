@@ -16,7 +16,9 @@ const Profilepage = React.lazy(() => import('./pages/profile/Profilepage'));
 const Communities = React.lazy(() => import('./pages/communities/Communities'));
 const ContactUs = React.lazy(() => import('./pages/contactus/ContactUs'));
 const CreateConfession = React.lazy(() => import('./pages/confession/CreateConfession'));
-const EditConfession = React.lazy(() => import('./pages/confession/EditConfession')); // Newly added component
+const EditConfession = React.lazy(() => import('./pages/confession/EditConfession'));
+const Forgetpassword = React.lazy(() => import('./pages/forgetpass/Forgetpassword'));
+const ResetPassword = React.lazy(() => import('./pages/forgetpass/Resetpassword'));
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -134,6 +136,22 @@ function App() {
                 element={
                   <PublicRoute>
                     <Registerpage />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/forgot-password"
+                element={
+                  <PublicRoute>
+                    <Forgetpassword />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/reset-password/:token"
+                element={
+                  <PublicRoute>
+                    <ResetPassword />
                   </PublicRoute>
                 }
               />

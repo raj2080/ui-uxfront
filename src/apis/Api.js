@@ -139,6 +139,27 @@ export const loginApi = async (data) => {
     }
 };
 
+// Password API Functions
+export const forgotPasswordApi = async (email) => {
+    try {
+        const response = await Api.post('/users/forgot-password', { email });
+        toast.success('Password reset link sent! Please check your email.');
+        return response;
+    } catch (error) {
+        throw handleApiError(error);
+    }
+};
+
+export const resetPasswordApi = async (token, newPassword) => {
+    try {
+        const response = await Api.post(`/users/reset-password/${token}`, { newPassword });
+        toast.success('Password reset successful! Please log in with your new password.');
+        return response;
+    } catch (error) {
+        throw handleApiError(error);
+    }
+};
+
 // Profile API Functions
 export const getUserProfile = async () => {
     try {

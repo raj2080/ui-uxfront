@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { loginApi } from "../../apis/Api";
 import { toast } from 'react-toastify';
-import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner'; // Corrected import path
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import './Loginpage.css';
 
 const Loginpage = ({ onLogin }) => {
@@ -42,8 +42,8 @@ const Loginpage = ({ onLogin }) => {
 
     if (!formData.password.trim()) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
     }
 
     setErrors(prev => ({
@@ -71,10 +71,11 @@ const Loginpage = ({ onLogin }) => {
       }
     } catch (error) {
       console.error('Login error:', error);
-      toast.error(error.response?.data?.message || 'Login failed. Please try again.');
+      const errorMessage = error.response?.data?.message || 'Login failed. Please try again.';
+      toast.error(errorMessage);
       setErrors(prev => ({
         ...prev,
-        general: error.response?.data?.message || 'Invalid email or password'
+        general: errorMessage
       }));
     } finally {
       setLoading(false);
@@ -147,7 +148,7 @@ const Loginpage = ({ onLogin }) => {
             disabled={loading}
           >
             {loading ? (
-              <LoadingSpinner fullScreen={false} /> // Use the LoadingSpinner component
+              <LoadingSpinner fullScreen={false} />
             ) : (
               'Sign In'
             )}
@@ -161,7 +162,6 @@ const Loginpage = ({ onLogin }) => {
             </Link>
           </p>
         </div>
-
       </div>
     </div>
   );

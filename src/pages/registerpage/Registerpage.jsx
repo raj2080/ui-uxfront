@@ -1,4 +1,3 @@
-// Registerpage.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { signupApi } from "../../apis/Api";
@@ -9,6 +8,7 @@ const Registerpage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [retypepassword, setRetypePassword] = useState('');
+  const [passwordStrength, setPasswordStrength] = useState(0);
   const [loading, setLoading] = useState(false);
 
   // States for error messages
@@ -30,13 +30,25 @@ const Registerpage = () => {
   };
 
   const handlePassword = (e) => {
-    setPassword(e.target.value);
+    const pwd = e.target.value;
+    setPassword(pwd);
     setPasswordError('');
+    evaluatePasswordStrength(pwd);
   };
 
   const handleRetypepassword = (e) => {
     setRetypePassword(e.target.value);
     setRetypePasswordError('');
+  };
+
+  const evaluatePasswordStrength = (password) => {
+    let strength = 0;
+
+    if (password.length >= 8) strength++;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+    if (/\d/.test(password) && /[@$!%*?&]/.test(password)) strength++;
+
+    setPasswordStrength(strength);
   };
 
   const validate = () => {
@@ -57,9 +69,6 @@ const Registerpage = () => {
 
     if (password.trim() === '') {
       setPasswordError("Password is Required!");
-      isValid = false;
-    } else if (password.length < 6) {
-      setPasswordError("Password must be at least 6 characters long");
       isValid = false;
     }
 
@@ -165,6 +174,18 @@ const Registerpage = () => {
               className={`form-input ${passwordError ? 'error' : ''}`}
             />
             {passwordError && <span className="error-text">{passwordError}</span>}
+            {password && (
+              <>
+                <div className="password-strength-text">
+                  {passwordStrength === 1 ? 'Weak' : passwordStrength === 2 ? 'Moderate' : passwordStrength === 3 ? 'Strong' : 'Very Weak'}
+                </div>
+                <div className="password-strength-bar">
+                  <div className={`strength-bar-item ${passwordStrength >= 1 ? 'active' : ''}`}></div>
+                  <div className={`strength-bar-item ${passwordStrength >= 2 ? 'active' : ''}`}></div>
+                  <div className={`strength-bar-item ${passwordStrength >= 3 ? 'active' : ''}`}></div>
+                </div>
+              </>
+            )}
           </div>
 
           <div className="form-group">
