@@ -30,7 +30,7 @@ const Profilepage = () => {
   // Confessions states
   const [confessions, setConfessions] = useState([]);
   const [confessionsLoading, setConfessionsLoading] = useState(false);
-  
+
   const navigate = useNavigate();
 
   // Fetch confessions function
@@ -84,7 +84,7 @@ const Profilepage = () => {
       const hours = String(now.getUTCHours()).padStart(2, '0');
       const minutes = String(now.getUTCMinutes()).padStart(2, '0');
       const seconds = String(now.getUTCSeconds()).padStart(2, '0');
-      
+
       setCurrentDateTime(`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`);
     };
 
@@ -136,7 +136,7 @@ const Profilepage = () => {
       setError(null);
 
       const response = await updateUserProfile(formData);
-      
+
       if (response.data.success) {
         setUserData(response.data.user);
         setIsEditing(false);
@@ -177,7 +177,7 @@ const Profilepage = () => {
           newPassword: '',
           confirmPassword: ''
         });
-        
+
         setTimeout(() => {
           setShowPasswordSection(false);
           setPasswordSuccess('');
@@ -234,7 +234,7 @@ const Profilepage = () => {
         <div className="main-content">
           {activeView === 'profile' ? (
             <div className="profile-container">
-              
+
               <div className="profile-header">
                 <div className="header-content">
                   <h1>My Profile</h1>
@@ -291,15 +291,15 @@ const Profilepage = () => {
                         </div>
 
                         <div className="form-actions">
-                          <button 
-                            type="submit" 
+                          <button
+                            type="submit"
                             className="save-button"
                             disabled={loading}
                           >
                             {loading ? 'Saving...' : 'Save Changes'}
                           </button>
-                          <button 
-                            type="button" 
+                          <button
+                            type="button"
                             className="cancel-button"
                             onClick={handleCancel}
                             disabled={loading}
@@ -332,7 +332,7 @@ const Profilepage = () => {
                   <div className="password-section">
                     <div className="section-header">
                       <h2>Password Settings</h2>
-                      <button 
+                      <button
                         className="toggle-password-button"
                         onClick={() => setShowPasswordSection(!showPasswordSection)}
                       >
@@ -395,15 +395,15 @@ const Profilepage = () => {
                         </div>
 
                         <div className="form-actions">
-                          <button 
-                            type="submit" 
+                          <button
+                            type="submit"
                             className="save-button"
                             disabled={passwordLoading}
                           >
                             {passwordLoading ? 'Updating Password...' : 'Update Password'}
                           </button>
-                          <button 
-                            type="button" 
+                          <button
+                            type="button"
                             className="cancel-button"
                             onClick={() => {
                               setShowPasswordSection(false);
@@ -436,18 +436,21 @@ const Profilepage = () => {
                   </div>
                 </div>
               </div>
-        
+
               <div className="confessions-list">
                 {confessions && confessions.length > 0 ? (
                   confessions.map((confession) => (
                     <div key={confession._id} className="confession-card">
+
                       {confession.imageUrl && (
-                        <img 
-                          src={`http://localhost:5000/${confession.imageUrl.replace(/^C:\\uiux development\\backend\\/, '')}`} 
-                          alt="Confession" 
-                          className="confession-image" 
+                        <img
+                          src={`http://localhost:5000/uploads/confessions/${confession.imageUrl.split('confessions\\').pop()}`}
+                          alt="Confession"
+                          className="confession-image"
                         />
                       )}
+
+
                       <div className="confession-divider"></div>
                       <h3 className="confession-title">{confession.title}</h3>
                       <p className="confession-text">{confession.content}</p>

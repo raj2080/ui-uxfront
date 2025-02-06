@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { resetPasswordApi } from '../../apis/Api';
+import moment from 'moment';
 import './Resetpassword.css';
 
 const ResetPassword = () => {
@@ -13,6 +14,8 @@ const ResetPassword = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [currentDateTime, setCurrentDateTime] = useState('');
+    const [currentUser] = useState('raj2080');
     const [passwordErrors, setPasswordErrors] = useState({
         length: false,
         uppercase: false,
@@ -20,6 +23,18 @@ const ResetPassword = () => {
         number: false,
         special: false
     });
+
+    useEffect(() => {
+        const updateDateTime = () => {
+            const now = moment().format('YYYY-MM-DD HH:mm:ss');
+            setCurrentDateTime(now);
+        };
+
+        updateDateTime();
+        const interval = setInterval(updateDateTime, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     const validatePassword = (password) => {
         const errors = {
@@ -50,8 +65,6 @@ const ResetPassword = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
-        setSuccess(false);
 
         if (!formData.newPassword || !formData.confirmPassword) {
             setError('Both password fields are required');
@@ -82,7 +95,8 @@ const ResetPassword = () => {
                     state: { 
                         message: 'Password reset successful! Please login with your new password.',
                         type: 'success'
-                    }
+                    },
+                    replace: true
                 });
             }
         } catch (err) {
@@ -94,6 +108,8 @@ const ResetPassword = () => {
 
     return (
         <div className="resetpassword-container">
+            
+            
             <div className="resetpassword-box">
                 <div className="resetpassword-header">
                     <h1>Reset Password</h1>
@@ -156,7 +172,7 @@ const ResetPassword = () => {
                     </div>
 
                     {error && <div className="error-message">{error}</div>}
-                    {success && <div className="success-message">Password reset successful! Redirecting to login...</div>}
+                    {success && <div className="success-message">Password reset successful!</div>}
 
                     <button 
                         type="submit" 
