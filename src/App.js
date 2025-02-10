@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
+import InactivityHandler from './utils/inactivityHandler';
 import { isLoggedIn } from './apis/Api';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
@@ -107,123 +108,125 @@ function App() {
 
   return (
     <Router>
-      <div className="app-container">
-        <Navbar 
-          isAuthenticated={isAuthenticated} 
-          onLogout={handleLogout}
-          user={currentUser}
-        />
-        
-        <main className="main-content">
-          <Suspense fallback={<LoadingSpinner />}>
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Homepage />} />
-              <Route path="/communities" element={<Communities />} />
-              <Route path="/contact" element={<ContactUs />} />
+      <InactivityHandler>
+        <div className="app-container">
+          <Navbar 
+            isAuthenticated={isAuthenticated} 
+            onLogout={handleLogout}
+            user={currentUser}
+          />
+          
+          <main className="main-content">
+            <Suspense fallback={<LoadingSpinner />}>
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<Homepage />} />
+                <Route path="/communities" element={<Communities />} />
+                <Route path="/contact" element={<ContactUs />} />
 
-              {/* Auth Routes */}
-              <Route
-                path="/login"
-                element={
-                  <PublicRoute>
-                    <Loginpage onLogin={handleLogin} />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/register"
-                element={
-                  <PublicRoute>
-                    <Registerpage />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/forgot-password"
-                element={
-                  <PublicRoute>
-                    <Forgetpassword />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/reset-password/:token"
-                element={
-                  <PublicRoute>
-                    <ResetPassword />
-                  </PublicRoute>
-                }
-              />
+                {/* Auth Routes */}
+                <Route
+                  path="/login"
+                  element={
+                    <PublicRoute>
+                      <Loginpage onLogin={handleLogin} />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/register"
+                  element={
+                    <PublicRoute>
+                      <Registerpage />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/forgot-password"
+                  element={
+                    <PublicRoute>
+                      <Forgetpassword />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/reset-password/:token"
+                  element={
+                    <PublicRoute>
+                      <ResetPassword />
+                    </PublicRoute>
+                  }
+                />
 
-              {/* Protected Routes */}
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute>
-                    <Profilepage onLogout={handleLogout} user={currentUser} />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/create-confession"
-                element={
-                  <ProtectedRoute>
-                    <CreateConfession user={currentUser} />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/edit-confession/:id"
-                element={
-                  <ProtectedRoute>
-                    <EditConfession user={currentUser} />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Protected Routes */}
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <Profilepage onLogout={handleLogout} user={currentUser} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/create-confession"
+                  element={
+                    <ProtectedRoute>
+                      <CreateConfession user={currentUser} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/edit-confession/:id"
+                  element={
+                    <ProtectedRoute>
+                      <EditConfession user={currentUser} />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Confession Routes */}
-              <Route
-                path="/confessions"
-                element={
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <Homepage />
-                  </Suspense>
-                }
-              />
+                {/* Confession Routes */}
+                <Route
+                  path="/confessions"
+                  element={
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <Homepage />
+                    </Suspense>
+                  }
+                />
 
-              {/* 404 Route */}
-              <Route
-                path="*"
-                element={
-                  <div className="error-page">
-                    <h1>404 - Page Not Found</h1>
-                    <p>The page you're looking for doesn't exist.</p>
-                    <button onClick={() => window.history.back()}>
-                      Go Back
-                    </button>
-                  </div>
-                }
-              />
-            </Routes>
-          </Suspense>
-        </main>
+                {/* 404 Route */}
+                <Route
+                  path="*"
+                  element={
+                    <div className="error-page">
+                      <h1>404 - Page Not Found</h1>
+                      <p>The page you're looking for doesn't exist.</p>
+                      <button onClick={() => window.history.back()}>
+                        Go Back
+                      </button>
+                    </div>
+                  }
+                />
+              </Routes>
+            </Suspense>
+          </main>
 
-        <Footer />
+          <Footer />
 
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-        />
-      </div>
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+          />
+        </div>
+      </InactivityHandler>
     </Router>
   );
 }
